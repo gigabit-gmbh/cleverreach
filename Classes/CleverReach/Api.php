@@ -247,7 +247,7 @@ class Api
         }
 
         try {
-            $this->rest->get('/groups.json/' . $groupId . '/receivers/' . $id);
+            $this->rest->get('/groups.json/' . $groupId . '/receivers/' . urlencode($id));
             return true;
         } catch (\Exception $ex) {
             if ($ex->getCode() !== 404) {
@@ -272,7 +272,7 @@ class Api
         }
 
         try {
-            $return = $this->rest->get('/groups.json/' . $groupId . '/receivers/' . $id);
+            $return = $this->rest->get('/groups.json/' . $groupId . '/receivers/' . urlencode($id));
             return Receiver::createInstance($return);
         } catch (\Exception $ex) {
             if ($ex->getCode() !== 404) {
