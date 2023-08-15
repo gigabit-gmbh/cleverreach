@@ -1,8 +1,8 @@
 plugin.tx_cleverreach {
-	
+
 	settings {
 		clientId = {$plugin.tx_cleverreach.clientId}
-        login = {$plugin.tx_cleverreach.login}
+    login = {$plugin.tx_cleverreach.login}
 		password = {$plugin.tx_cleverreach.password}
 		formId = {$plugin.tx_cleverreach.formId}
 		groupId = {$plugin.tx_cleverreach.groupId}
@@ -13,6 +13,6 @@ plugin.tx_cleverreach {
 		oauthClientId = {$plugin.tx_cleverreach.oauthClientId}
 		oauthClientSecret = {$plugin.tx_cleverreach.oauthClientSecret}
 	}
-	
+
 }
 

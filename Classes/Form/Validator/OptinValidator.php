@@ -1,4 +1,5 @@
 <?php
+
 namespace WapplerSystems\Cleverreach\Form\Validator;
 
 /*
@@ -15,8 +16,8 @@ namespace WapplerSystems\Cleverreach\Form\Validator;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
+use WapplerSystems\Cleverreach\CleverReach\Api;
 use WapplerSystems\Cleverreach\Service\ConfigurationService;
 
 /**
@@ -27,21 +28,7 @@ use WapplerSystems\Cleverreach\Service\ConfigurationService;
 class OptinValidator extends AbstractValidator
 {
 
-    /**
-     * @var \WapplerSystems\Cleverreach\CleverReach\Api
-     * @TYPO3\CMS\Extbase\Annotation\Inject
-     */
-    protected $api;
-
-    /**
-     * @var array
-     */
-    protected $supportedOptions = [
-        'groupId' => ['', 'The groupId', 'string', false]
-    ];
-
-
-    /**
+     /**
      * Checks if the given value is already in the list
      *
      * @param mixed $value The value that should be validated
@@ -51,17 +38,19 @@ class OptinValidator extends AbstractValidator
     {
 
         /** @var ConfigurationService $configurationService */
-        $configurationService = GeneralUtility::makeInstance(ObjectManager::class)->get(ConfigurationService::class);
+        $configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
         $configuration = $configurationService->getConfiguration();
 
-        $groupId = isset($this->options['groupId']) && \strlen($this->options['groupId']) > 0 ? $this->options['groupId'] : $configuration['groupId'];
+        $api = GeneralUtility::makeInstance(Api::class);
+
+        $groupId = ($this->options['groupId'] ?? '') ? $this->options['groupId'] : $configuration['groupId'];
 
         if (empty($groupId)) {
-            $this->addError('Group ID not set.',1534719428);
+            $this->addError('Group ID not set.', 1534719428);
             return;
         }
 
-        if ($this->api->isReceiverOfGroupAndActive($value,$groupId)) {
+        if ($api->isReceiverOfGroupAndActive($value, $groupId)) {
             $this->addError(
                 $this->translateErrorMessage(
                     'validator.alreadyInList',

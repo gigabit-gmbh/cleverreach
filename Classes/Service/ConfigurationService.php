@@ -1,6 +1,8 @@
 <?php
+
 namespace WapplerSystems\Cleverreach\Service;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 /**
@@ -14,20 +16,14 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 /**
  * Class ConfigurationService
  */
-class ConfigurationService {
+class ConfigurationService
+{
 
 
-    /**
-     * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
-     * @TYPO3\CMS\Extbase\Annotation\Inject
-     */
-    protected $objectManager;
+    public function getConfiguration()
+    {
 
-
-    public function getConfiguration() {
-
-        /** @var ConfigurationManagerInterface $configurationManager */
-        $configurationManager = $this->objectManager->get(ConfigurationManagerInterface::class);
+        $configurationManager = GeneralUtility::makeInstance(ConfigurationManagerInterface::class);
         $settings = $configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT,
             'cleverreach'
@@ -38,17 +34,18 @@ class ConfigurationService {
     /**
      * @return string
      */
-    public function getRestUrl() {
+    public function getRestUrl()
+    {
 
         $config = $this->getConfiguration();
         return $config['restUrl'];
-
     }
 
     /**
      * @return string
      */
-    public function getClientId() {
+    public function getClientId()
+    {
 
         $config = $this->getConfiguration();
         return $config['clientId'];
@@ -58,7 +55,8 @@ class ConfigurationService {
     /**
      * @return string
      */
-    public function getLoginName() {
+    public function getLoginName()
+    {
         $config = $this->getConfiguration();
         return $config['login'];
     }
@@ -66,7 +64,8 @@ class ConfigurationService {
     /**
      * @return string
      */
-    public function getPassword() {
+    public function getPassword()
+    {
         $config = $this->getConfiguration();
         return $config['password'];
     }
@@ -74,7 +73,8 @@ class ConfigurationService {
     /**
      * @return int
      */
-    public function getGroupId() {
+    public function getGroupId()
+    {
         $config = $this->getConfiguration();
         return (int)$config['groupId'];
     }
@@ -82,7 +82,8 @@ class ConfigurationService {
     /**
      * @return int
      */
-    public function getFormId() {
+    public function getFormId()
+    {
         $config = $this->getConfiguration();
         return (int)$config['formId'];
     }
@@ -90,7 +91,8 @@ class ConfigurationService {
     /**
      * @return string
      */
-    public function getUnsubscribeMethod() {
+    public function getUnsubscribeMethod()
+    {
         $config = $this->getConfiguration();
         return $config['unsubscribemethod'];
     }

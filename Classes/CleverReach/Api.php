@@ -13,18 +13,17 @@ namespace WapplerSystems\Cleverreach\CleverReach;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WapplerSystems\Cleverreach\Domain\Model\Receiver;
+use WapplerSystems\Cleverreach\Service\ConfigurationService;
 use WapplerSystems\Cleverreach\Tools\Rest;
 
 
 class Api
 {
 
-
     /**
-     * @var \WapplerSystems\Cleverreach\Service\ConfigurationService
-     * @TYPO3\CMS\Extbase\Annotation\Inject
+     * @var ConfigurationService
      */
-    protected $configurationService;
+    protected ConfigurationService $configurationService;
 
 
     /** @var Rest */
@@ -35,14 +34,14 @@ class Api
     protected $logger;
 
 
-    const MODE_OPTIN = 'optin';
+    public const MODE_OPTIN = 'optin';
 
-    const MODE_OPTOUT = 'optout';
+    public const MODE_OPTOUT = 'optout';
 
 
-    public function __construct()
+    public function __construct(ConfigurationService $configurationService)
     {
-
+        $this->configurationService = $configurationService;
         $this->logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
     }
 
@@ -263,7 +262,7 @@ class Api
      * @param int $groupId
      * @return Receiver
      */
-    public function getReceiverOfGroup($id, $groupId = null)
+    public function getReceiverOfGroup($id, $groupId = null): ?Receiver
     {
         $this->connect();
 
@@ -290,8 +289,6 @@ class Api
      */
     public function isReceiverOfGroupAndActive($id, $groupId = null): bool
     {
-
-
         $receiver = $this->getReceiverOfGroup($id, $groupId);
         if ($receiver !== null) {
             return $receiver->isActive();
@@ -305,7 +302,7 @@ class Api
      * @param int $formId
      * @param int $groupId
      */
-    public function sendSubscribeMail($email, $formId = null, $groupId = null)
+    public function sendSubscribeMail($email, $formId = null, $groupId = null): void
     {
         $this->connect();
 
@@ -350,7 +347,7 @@ class Api
      * @param int $formId
      * @param int $groupId
      */
-    public function sendUnsubscribeMail($email, $formId = null, $groupId = null)
+    public function sendUnsubscribeMail($email, $formId = null, $groupId = null): void
     {
         $this->connect();
 
@@ -384,7 +381,7 @@ class Api
     }
 
 
-    private function log(\Exception $ex)
+    private function log(\Exception $ex): void
     {
 
         $this->logger->info($ex->getMessage());
@@ -392,10 +389,11 @@ class Api
     }
 
 
-    public function setAttributeOfReceiver($email,$attributeId,$value) {
+    public function setAttributeOfReceiver($email, $attributeId, $value): void
+    {
         $this->connect();
         try {
-            $this->rest->put('/receivers.json/'.$email.'/attributes/'.$attributeId,
+            $this->rest->put('/receivers.json/' . $email . '/attributes/' . $attributeId,
                 [
                     'value' => $value,
                 ]
@@ -407,10 +405,11 @@ class Api
     }
 
 
-    public function deleteReceiver($email,$groupId = null) {
+    public function deleteReceiver($email, $groupId = null): void
+    {
         $this->connect();
         try {
-            $this->rest->delete('/receivers.json/'.$email.'',
+            $this->rest->delete('/receivers.json/' . $email . '',
                 [
                     'group_id' => $groupId,
                 ]
